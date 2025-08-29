@@ -1,22 +1,20 @@
-FROM python:3.10-slim
+FROM node:18-bullseye
 
-WORKDIR /app
+# Install Python and pip
+RUN apt-get update && apt-get install -y python3 python3-pip
 
-# Install required packages
-RUN pip install --no-cache-dir \
-    bcsfe \
-    flask \
-    flask-socketio \
-    python-socketio \
-    eventlet
+# Install bcsfe
+RUN pip3 install bcsfe
 
-# Copy application files
-COPY app.py .
-COPY templates ./templates
-COPY static ./static
+# Create app directory
+WORKDIR /usr/src/app
 
-# Expose port for web interface
-EXPOSE 5000
+# Install app dependencies
+COPY package*.json ./
+RUN npm install
 
-# Run the Flask application
-CMD ["python", "app.py"]
+# Bundle app source
+COPY . .
+
+EXPOSE 3000
+CMD [ "node", "server.js" ]

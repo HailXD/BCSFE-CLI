@@ -1,0 +1,14 @@
+{
+  "name": "web-bcsfe",
+  "version": "1.0.0",
+  "description": "Web interface for bcsfe",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-pty": "^1.0.0",
+    "socket.io": "^4.3.2"
+  }
+}
