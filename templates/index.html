@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSFE CLI Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BCSFE CLI Interface</h1>
+            <button id="clearBtn" class="btn btn-secondary">Clear Console</button>
+            <button id="stopBtn" class="btn btn-danger">Stop Execution</button>
+        </header>
+        
+        <div class="main-content">
+            <!-- Console Output -->
+            <div class="console-container">
+                <div class="console-header">Console Output</div>
+                <div id="console" class="console"></div>
+            </div>
+            
+            <!-- Input Section -->
+            <div class="input-section">
+                <!-- Single Command Input -->
+                <div class="single-command">
+                    <h3>Single Command</h3>
+                    <div class="input-group">
+                        <input type="text" 
+                               id="singleCommand" 
+                               placeholder="Enter command (e.g., 'help' or 'bcsfe --help')"
+                               class="command-input">
+                        <button id="executeBtn" class="btn btn-primary">Execute</button>
+                    </div>
+                    <small class="help-text">Press Enter to execute</small>
+                </div>
+                
+                <!-- Batch Commands Input -->
+                <div class="batch-commands">
+                    <h3>Batch Commands</h3>
+                    <textarea id="batchCommands" 
+                              placeholder="Enter multiple commands, one per line:&#10;help&#10;--version&#10;..."
+                              class="batch-textarea"></textarea>
+                    <button id="submitBatchBtn" class="btn btn-primary btn-block">Submit All</button>
+                    <small class="help-text">Each line will be executed as a separate command</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="status">Ready</span>
+            <span id="connectionStatus" class="connection-status">Disconnected</span>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
