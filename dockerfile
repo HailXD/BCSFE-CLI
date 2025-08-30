@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y python3 python3-pip
 # Install bcsfe
 RUN pip3 install bcsfe
 
+# Give all users write permissions to the bcsfe package directory
+RUN chmod -R a+w /usr/local/lib/python3.9/dist-packages/bcsfe
+
 # Create upload directory
 RUN mkdir -p /root/Documents/bcsfe/saves
 
